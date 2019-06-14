@@ -1,0 +1,27 @@
+@import 'variables';
+@import 'mixins';
+@import 'media';
+@import 'reset';
+
+html {
+  font: 62.5% 'Open Sans', arial, sans-serif;
+}
+
+body {
+  line-height: 1.6;
+  background-color: #233142;
+}
+
+h1 {
+  margin: 20px 0;
+  text-align: center;
+  font-size: 45px;
+  color: #FFF;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
