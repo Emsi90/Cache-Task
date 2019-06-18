@@ -192,3 +192,80 @@ function addNote() {
   const pNotes = tx.objectStore("articles")
   pNotes.add(note)
 }
+
+
+// ==============================
+// FETCH DATA EXC
+// ==============================
+async function fetchData2(url) {
+
+  let data = null;
+
+  const res = await fetch(url)
+    .then(response => response.json())
+    .then(myJson => {
+
+      console.log(myJson);
+      data = myJson;
+
+    })
+    .catch(error => console.log(error));
+
+    return res;
+
+  // const response = await fetch(url);
+  // const data = await response.json();
+  // return data.resolve;
+
+}
+
+console.log('Result', fetchData2(URL));
+
+
+/*
+
+1. COOKIE
+- old, hopeless API
+- they are send to server with every task (pros and cons)
+- not safe (CRDF, XSS)
+- limit only 4kb
+
+When use cookie:
+- like tracker (like google do)
+- store user session
+- store tokens
+
+When dont use cookies
+- to chaching
+- dont save interface state (modal, popup etc.)
+- dont use in javascript
+
+
+2. WEBSTORAGE (local storage, session storage)
+- the same interface
+- local storage storage data for ever until to someone delete them
+- session storage only storage data in session, until to close tab
+- minimum 2mb
+- have to be string (we can use JSON.stringify)
+
+What store in DOM Storage?
+- interface state
+- forms values
+- Tokens using by JS (API Tokens, Json web tokens)
+
+What dont store in DOM Storage?
+- store which we need in web or service worker
+- blob (binary data) / we have to convert to string (base64) etc.
+- Data collection (all time serialize - deserialize etc)
+
+3. INDEXDB (noSQL)
+What store in INDEXDB?
+- Data collection
+- Binary Data
+- store request HTTP
+
+What dont store in DOM Storage?
+- simple data
+- everything what we can store in cookie or DOM Storage
+
+*/
