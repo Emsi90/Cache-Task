@@ -29,14 +29,33 @@ function fetchData(url) {
       }
       // Our JSON has a more than 4kb
       let data = JSON.stringify(myJson);
-
-      
+      // console.log(myJson);
 
       // Other
-      localStorage.setItem('data', data);
+      let dataEx = JSON.stringify(myJson.articles); 
+      // localStorage.setItem('data', data);
       sessionStorage.setItem('data', data);
 
-      addDataToIndexDb(myJson.articles);
+      let date = new Date();
+      // localStorage.setItem('expTime', date);
+      // console.log(date);
+      // console.log(localStorage.getItem('expTime'));
+      // console.log(new Date(date - new Date(localStorage.getItem('expTime'))).getMinutes());
+
+      let expTime = new Date(localStorage.getItem('expTime'));
+      let timeCondition = new Date(date - expTime).getMinutes();
+
+      if(!expTime || timeCondition >= 1) {
+        localStorage.setItem('expTime', date);
+        localStorage.setItem('data', data);
+      }
+
+      // console.log('PRESENT DATE - ', date);
+      // console.log('DATE IN LOCALSTORE - ', expTime);
+      // console.log('TIME DIFFERENT (minutes) - ', timeCondition);
+
+      // addDataToIndexDb(myJson.articles);
+      // IndexDbInit(myJson.articles)
       // addNote();
 
     })
@@ -146,40 +165,74 @@ displayLastUpdate();
 //=======================
 // IndexDB
 //=======================
-let db = null;
-(function createDb() {
 
-  let request = indexedDB.open('data', 2);
+function IndexDbInit(data) {
 
-  request.onerror = function(event) {
-    console.log("Database error: " + event.target.errorCode);
+  let request = indexedDB.open('data', 2),
+        db,
+        tx,
+        store,
+        index;
+
+  request.onupgradeneeded = function(e) {
+    let db = request.result;
+    
+    store = db.createObjectStore('articles', { autoIncrement : true });
+    index = store.createIndex('author', 'author', {unique: false});
+
+    store.transaction.oncomplete = function(e) {
+      var articleObjectStore = db.transaction('articles', 'readwrite').objectStore('articles');
+      data.forEach(item => {
+          articleObjectStore.add(item);
+        });
+    }
+    
+    // tx = db.transaction('articles', 'readwrite');
+    // store = tx.objectStore('articles');
+    // index = store.index('author');
+    
+    // let articleObjectStore = db.transaction('articles', 'readwrite').objectStore('articles');
+    // data.forEach(item => {
+    //   articleObjectStore.add(item);
+    // });
+
+    // let res = store.getAll();
+
+    // res.onsuccess = function(e) {
+    //   console.log('hereeeee',  res.result);
+    // };
+
   }
 
-  request.onsuccess = function(event) {
-    db = event.target.result;
+  request.onerror = function(e) {
+    console.log("there was an error: " + e.target.errorCode);
   }
+    
+  request.onsuccess = function(e) {
+    db = request.result;
+    var transaction = db.transaction(["articles"]);
+    var objectStore = transaction.objectStore("articles");
+    var request = objectStore.getAll();
 
-  request.onupgradeneeded = function(event) {
-    db = event.target.result;
-
-    let objectStore = db.createObjectStore('articles', { autoIncrement : true });
+    request.onsuccess = function(e) {
+      console.log('hereeeee',  request.result);
+    };
 
   }
-
-})();
-
-function addDataToIndexDb(data) {
-
-  var customerObjectStore = db.transaction("articles", "readwrite").objectStore("articles");
-    data.forEach(function(item) {
-      if(item.author !== null) {
-        customerObjectStore.add(item);
-      } else {
-        customerObjectStore.add('No Name');
-      }
-    });
 
 }
+
+// function addDataToIndexDb(data) {
+
+//   var articleObjectStore = db.transaction('articles', 'readwrite').objectStore('articles');
+//     data.forEach(function(item) {
+//       articleObjectStore.add(item);
+//     });
+
+// }
+
+
+
 
 // Other example
 function addNote() {
