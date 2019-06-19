@@ -250,30 +250,47 @@ function addNote() {
 // ==============================
 // FETCH DATA EXC
 // ==============================
-async function fetchData2(url) {
+function fetchData2(url) {
 
-  let data = null;
-
-  const res = await fetch(url)
+  return fetch(url)
     .then(response => response.json())
     .then(myJson => {
 
       console.log(myJson);
-      data = myJson;
 
     })
     .catch(error => console.log(error));
 
-    return res;
-
-  // const response = await fetch(url);
-  // const data = await response.json();
-  // return data.resolve;
-
 }
 
-console.log('Result', fetchData2(URL));
+// console.log('Result', fetchData2(URL).then(res => res));
 
+
+const getPromiseJSON = async (url) => {
+  try{
+      const user = await fetch(url);
+      const body = await user.json();
+      return body;
+  }
+  catch (err) {
+    throw new Error(err);
+  }
+ };
+ 
+//  const superData = getPromiseJSON(URL)
+//   .then(user => console.log(user))
+//   .catch(err => console.log(err))
+
+//  console.log(superData) // promise
+
+
+ const request = async () => {
+  const response = await fetch(URL);
+  const json = await response.json();
+  console.log(json);
+}
+
+console.log(request());
 
 /*
 
