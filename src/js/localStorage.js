@@ -1,3 +1,5 @@
+import { displayContent } from './view.js';
+
 export function setLocalStorageExpTime(minutes) {
 
   let date = new Date();
@@ -16,7 +18,7 @@ export function checkLocalStorageTime() {
   let expDate = new Date(time);
   let presentDate = new Date();
 
-  if(expDate < presentDate) {
+  if (expDate < presentDate) {
     localStorage.removeItem('data');
     localStorage.removeItem('dataExp');
     return true;
@@ -25,3 +27,21 @@ export function checkLocalStorageTime() {
   }
 
 }
+
+export function checkLocalInStorage(obj) {
+
+  if (!!localStorage.getItem('data')) {
+
+    if (checkLocalStorageTime()) {
+      let data = JSON.stringify(obj);
+      localStorage.setItem('data', data);
+      setLocalStorageExpTime(obj.time);
+      displayContent(obj.author, obj.desc);
+    } else {
+      let localObj = JSON.parse(localStorage.getItem('data'));
+      displayContent(localObj.author, localObj.desc);
+    }
+
+  }
+
+};

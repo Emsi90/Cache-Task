@@ -1,7 +1,7 @@
 import { WEBAPI } from './variables.js';
-import { displayContent, displayLastUpdate, checkDataInStorage } from "./view.js";
-import { setCookie, setCookieTime, getCookie } from './cookie.js'
-import { setLocalStorageExpTime } from './localStorage.js'
+import { setCookie, setCookieTime, getCookie, checkCookieInStorage } from './cookie.js';
+import { setLocalStorageExpTime, checkLocalInStorage } from './localStorage.js';
+import { displayContent, displayLastUpdate } from "./view.js";
 
 export function fetchData(url, cookieTime) {
 
@@ -46,8 +46,7 @@ function setWebApi(obj, url) {
 
 }
 
-
-function checkSetCookie(obj, url) {
+function checkSetCookie(obj) {
 
 	let strCookie = `author:${obj.author}|desc:${obj.desc}`;
 
@@ -60,17 +59,17 @@ function checkSetCookie(obj, url) {
 		}, 1000);
 	} else {
 		displayLastUpdate();
-		checkDataInStorage(() => fetchData(url, obj.time));
+		checkCookieInStorage();
 	}
 
 }
 
-function checkSetLocalStorage(obj, url) {
+function checkSetLocalStorage(obj) {
 
 	let data = JSON.stringify(obj);
 	let getLocal = localStorage.getItem('data');
 	if(data !== getLocal) {
-
+		console.log('dwa');
 		setTimeout(() => {
 			localStorage.setItem('data', data);
 			displayContent(obj.author, obj.desc);
@@ -78,8 +77,10 @@ function checkSetLocalStorage(obj, url) {
 			displayLastUpdate();
 		}, 1000);
 	} else {
+		
+		console.log('raz');
 		displayLastUpdate();
-		checkDataInStorage(() => fetchData(url, obj.time));
+		checkLocalInStorage(obj);
 	}
 
 }

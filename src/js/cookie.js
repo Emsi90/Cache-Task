@@ -1,3 +1,5 @@
+import { displayContent } from './view.js';
+
 export function setCookie(name, value, minutes) {
   let expires = '';
   if (minutes) {
@@ -29,3 +31,20 @@ export function setCookieTime(cookieTime) {
   setCookie('dateTime', date.toLocaleString(), cookieTime);
 
 }
+
+export function checkCookieInStorage() {
+
+  if (!!getCookie('data')) {
+
+    let cookie = getCookie('data').split('|');
+    let arrCookie = cookie.map(item => {
+      return item.split(':');
+    });
+
+    let obj = Object.fromEntries(arrCookie);
+
+    displayContent(obj.author, obj.desc);
+
+  } 
+
+};

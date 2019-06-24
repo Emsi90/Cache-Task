@@ -1,5 +1,4 @@
 import { getCookie } from './cookie.js'
-import { checkLocalStorageTime } from './localStorage.js'
 
 export function btnAction(fn) {
 
@@ -24,33 +23,6 @@ export function displayContent(author, content) {
     contentText.textContent = content;
   }
 }
-
-export function checkDataInStorage(fn) {
-
-  // console.log(fn());
-  if (!!getCookie('data')) {
-
-    let cookie = getCookie('data').split('|');
-    let arrCookie = cookie.map(item => {
-      return item.split(':');
-    });
-
-    let obj = Object.fromEntries(arrCookie);
-
-    displayContent(obj.author, obj.desc);
-
-  } else if(!!localStorage.getItem('data')) {
-
-    if(checkLocalStorageTime()) {
-      fn();
-    } else {
-      let obj = JSON.parse(localStorage.getItem('data'));
-      displayContent(obj.author, obj.desc);
-    }
-
-  }
-
-};
 
 export function displayLastUpdate() {
 
