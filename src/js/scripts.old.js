@@ -215,7 +215,6 @@ function IndexDbInit(data) {
     var request = objectStore.getAll();
 
     request.onsuccess = function(e) {
-      console.log('hereeeee',  request.result);
     };
 
   }

@@ -1,6 +1,7 @@
 import { WEBAPI } from './variables.js';
 import { setCookie, setCookieTime, getCookie, checkCookieInStorage } from './cookie.js';
 import { setLocalStorageExpTime, checkLocalInStorage } from './localStorage.js';
+import { IndexDbInit } from './indexDb.js'
 import { displayContent, displayLastUpdate } from "./view.js";
 
 export function fetchData(url, cookieTime) {
@@ -40,6 +41,9 @@ function setWebApi(obj, url) {
 		case 'SESSIONSTORAGE':
 			checkSetSessionStorage(obj, url);
 		break;
+		case 'INDEXDB':
+			checkSetIndexDB(obj, url);
+		break;
 		default:
 			checkSetCookie(obj, url);
 	}
@@ -69,7 +73,6 @@ function checkSetLocalStorage(obj) {
 	let data = JSON.stringify(obj);
 	let getLocal = localStorage.getItem('data');
 	if(data !== getLocal) {
-		console.log('dwa');
 		setTimeout(() => {
 			localStorage.setItem('data', data);
 			displayContent(obj.author, obj.desc);
@@ -78,9 +81,14 @@ function checkSetLocalStorage(obj) {
 		}, 1000);
 	} else {
 		
-		console.log('raz');
 		displayLastUpdate();
 		checkLocalInStorage(obj);
 	}
+
+}
+
+function checkSetIndexDB(obj) {
+	console.log(obj);
+	IndexDbInit(obj);
 
 }
