@@ -1,4 +1,4 @@
-import { WEBAPI } from './variables.js';
+import { WEBAPI } from './constants.js';
 import { setCookie, setCookieTime, getCookie, checkCookieInStorage } from './cookie.js';
 import { setLocalStorageExpTime, checkLocalInStorage } from './localStorage.js';
 import { IndexDbInit } from './indexDb.js'
