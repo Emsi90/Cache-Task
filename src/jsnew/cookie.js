@@ -1,26 +1,31 @@
-class CookieStorage {
+import Storage from './classes.js';
+
+class CookieStorage extends Storage {
 
   constructor(obj, config) {
-    this.obj = obj;
-    this.time = config.time;
-    this.storageName = config.storageName;
-    this.cookieValue = `author:${this.obj.author}|desc:${this.obj.desc}`;
+    super(obj, config);
+    this.cookieValue = `author:${obj.author}|desc:${obj.desc}`;
   }
 
-  setCookie() {
+  setStorage(
+    storageName = this.storageName,
+    cookieValue = this.cookieValue,
+    time = this.time) {
 
     let expires = '';
-    if (this.time) {
+    if (time) {
       let date = new Date();
-      date.setTime(date.getTime() + (this.time * 60 * 1000));
+      date.setTime(date.getTime() + (time * 60 * 1000));
       expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = this.storageName + "=" + (this.cookieValue || "") + expires + "; path=/";
+    
+    document.cookie = storageName + "=" + (cookieValue || "") + expires + "; path=/";
 
   }
 
-  getCookie() {
-    var nameEQ = this.storageName + "=";
+  getStorage(name = this.storageName) {
+
+    var nameEQ = name + "=";
     var ca = document.cookie.split(';');
 
     for (var i = 0; i < ca.length; i++) {
@@ -30,22 +35,48 @@ class CookieStorage {
       }
       if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
+
     return null;
+
   }
 
 
-  setCookieTime() {
+  setStorageTime() {
 
     let date = new Date();
-    this.setCookie( `${this.fromEntries}Time`, date.toLocaleString(), this.time);
+    date.setTime(date.getTime() + (this.time * 60 * 1000));
+    this.setStorage( `${this.storageName}Time`, date);
 
   }
 
-  checkCookieInStorage() {
+  getStorageTime() {
 
-    if (!!this.getCookie(this.storageName)) {
+    let date;
 
-      let cookie = this.getCookie(this.storageName).split('|');
+    if(this.checkStorageTime()) {
+      date = new Date(this.getStorage(`${this.storageName}Time`));
+    } else {
+      date = new Date(0);
+    }
+
+    return date;
+
+  }
+
+  checkStorageTime() {
+
+    let checkStorageTime = !!this.getStorage(`${this.storageName}Time`)
+    if(checkStorageTime) {
+      return true;
+    }
+
+  }
+
+  transformStorageToObj() {
+
+    if (!!this.getStorage(this.storageName)) {
+
+      let cookie = this.getStorage(this.storageName).split('|');
       let arrCookie = cookie.map(item => {
         return item.split(':');
       });
@@ -58,6 +89,11 @@ class CookieStorage {
 
   }
 
+  storageToOutput(obj) {
+    let strCookie = `author:${obj.author}|desc:${obj.desc}`;
+    return strCookie;
+  }
+
 }
 
-  export default CookieStorage;
+export default CookieStorage;

@@ -23,7 +23,7 @@ When use cookie:
 - store user session
 - store tokens
 
-When dont use cookies
+When shouldn't use cookies
 - to chaching
 - dont save interface state (modal, popup etc.)
 - dont use in javascript
@@ -41,7 +41,7 @@ What store in DOM Storage?
 - forms values
 - Tokens using by JS (API Tokens, Json web tokens)
 
-What dont store in DOM Storage?
+What shouldn't store in DOM Storage?
 - store which we need in web or service worker
 - blob (binary data) / we have to convert to string (base64) etc.
 - Data collection (all time serialize - deserialize etc)
@@ -52,6 +52,6 @@ What store in INDEXDB?
 - Binary Data
 - store request HTTP
 
-What dont store in DOM Storage?
+What shouldn't store in DOM Storage?
 - simple data
 - everything what we can store in cookie or DOM Storage

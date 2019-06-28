@@ -1,4 +1,5 @@
 import CookieStorage from './cookie.js'
+import LocalStorage from './localStorage.js'
 
 export let middleware = (function() {
 
@@ -38,7 +39,7 @@ export let middleware = (function() {
         storage = new CookieStorage(obj, config);
       break;
       case 'LOCALSTORAGE':
-        console.log('LocalStorage');
+        storage = new LocalStorage(obj, config);
       break;
       case 'SESSIONSTORAGE':
         console.log('SessionStorage');
